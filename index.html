@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro e Associação de Fornecedores</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Botões do cadastro -->
+    <div id="tela-principal">
+        <h1>Cadastro</h1>
+        <button id="btn-cadastro-fornecedor" onclick="mostrarCadastroFornecedor()">Cadastro de Fornecedor</button>
+        <button id="btn-cadastro-produto" onclick="mostrarCadastroProduto()">Cadastro de Produtos</button>
+        <button id="btn-associar-fornecedor" onclick="mostrarAssociarFornecedor()">Associação de Fornecedor a Produto</button>
+    </div>
+
+    <!-- Tela de Cadastro de Fornecedor -->
+    <section class="form-container" id="form-cadastro-fornecedor" style="display: none;">
+        <header>
+            <h1>Cadastro de Fornecedor</h1>
+            <button class="btn-close" onclick="voltarTelaPrincipal()">Voltar</button>
+        </header>
+        <form id="cadastro-fornecedor-form">
+            <div class="form-group">
+                <label for="nome-empresa">Nome da Empresa</label>
+                <input type="text" id="nome-empresa" placeholder="Insira o nome da empresa" required>
+            </div>
+            <div class="form-group">
+                <label for="cnpj">CNPJ</label>
+                <input type="text" id="cnpj" placeholder="00.000.000/0000-00" required>
+            </div>
+            <div class="form-group">
+                <label for="endereco">Endereço</label>
+                <textarea id="endereco" placeholder="Insira o endereço completo da empresa" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="telefone">Telefone</label>
+                <input type="text" id="telefone" placeholder="(00) 0000-0000" required>
+            </div>
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" placeholder="exemplo@fornecedor.com" required>
+            </div>
+            <div class="form-group">
+                <label for="contato">Contato Principal</label>
+                <input type="text" id="contato" placeholder="Nome do contato principal" required>
+            </div>
+            <button class="btn-submit" type="submit">Cadastrar Fornecedor</button>
+        </form>
+    </section>
+
+    <!-- Tela de Cadastro de Produto -->
+    <section class="form-container" id="form-cadastro-produto" style="display: none;">
+        <header>
+            <h1>Cadastro de Produto</h1>
+            <button class="btn-close" onclick="voltarTelaPrincipal()">Voltar</button>
+        </header>
+        <form id="cadastro-produto-form">
+            <div class="form-group">
+                <label for="produto-nome">Nome do Produto</label>
+                <input type="text" id="produto-nome" placeholder="Insira o nome do produto" required>
+            </div>
+            <div class="form-group">
+                <label for="produto-codigo-barras">Código de Barras</label>
+                <input type="text" id="produto-codigo-barras" placeholder="Insira o código de barras" required>
+            </div>
+            <div class="form-group">
+                <label for="produto-descricao">Descrição</label>
+                <textarea id="produto-descricao" placeholder="Descreva brevemente o produto" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="produto-quantidade">Quantidade em Estoque</label>
+                <input type="number" id="produto-quantidade" placeholder="Quantidade disponível" required>
+            </div>
+            <div class="form-group">
+                <label for="produto-categoria">Categoria</label>
+                <select id="produto-categoria" required>
+                    <option value="">Selecione uma categoria</option>
+                    <option value="eletronicos">Eletrônicos</option>
+                    <option value="alimentos">Alimentos</option>
+                    <option value="vestuarios">Vestuário</option>
+                    <option value="outros">Outro</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="produto-validade">Data de Validade</label>
+                <input type="date" id="produto-validade" required>
+            </div>
+            <button class="btn-submit" type="submit">Cadastrar Produto</button>
+        </form>
+    </section>
+
+    <!-- Tela de Associação de Fornecedor a Produto -->
+    <section class="form-container" id="form-associacao-fornecedor" style="display: none;">
+        <header>
+            <h1>Associação de Fornecedor a Produto</h1>
+            <button class="btn-close" onclick="voltarTelaPrincipal()">Voltar</button>
+        </header>
+        <div class="form-group">
+            <label for="fornecedor-select">Selecione um Fornecedor</label>
+            <select id="fornecedor-select" required>
+                <option value="">Selecione um fornecedor</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="produto-select">Selecione um Produto</label>
+            <select id="produto-select" required>
+                <option value="">Selecione um produto</option>
+            </select>
+        </div>
+        <button class="btn-submit" onclick="associarFornecedor()">Associar Fornecedor</button>
+        <h2>Fornecedores Associados</h2>
+        <table id="fornecedores-associados">
+            <thead>
+                <tr>
+                    <th>Fornecedor</th>
+                    <th>Produto</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <script>
+        // Navegação entre telas e funções de carregamento
+        function mostrarCadastroFornecedor() {
+            document.getElementById('form-cadastro-fornecedor').style.display = 'block';
+            document.getElementById('tela-principal').style.display = 'none';
+        }
+
+        function mostrarCadastroProduto() {
+            document.getElementById('form-cadastro-produto').style.display = 'block';
+            document.getElementById('tela-principal').style.display = 'none';
+        }
+
+        function mostrarAssociarFornecedor() {
+            document.getElementById('form-associacao-fornecedor').style.display = 'block';
+            document.getElementById('tela-principal').style.display = 'none';
+            carregarFornecedores();
+            carregarProdutos();
+            carregarAssociacoes();
+        }
+
+        function voltarTelaPrincipal() {
+            document.getElementById('tela-principal').style.display = 'block';
+            document.getElementById('form-cadastro-fornecedor').style.display = 'none';
+            document.getElementById('form-cadastro-produto').style.display = 'none';
+            document.getElementById('form-associacao-fornecedor').style.display = 'none';
+        }
+
+        // Cadastro de Fornecedor
+        document.getElementById('cadastro-fornecedor-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const nomeEmpresa = document.getElementById('nome-empresa').value.trim();
+            const cnpj = document.getElementById('cnpj').value.trim();
+            const fornecedores = JSON.parse(localStorage.getItem('fornecedores')) || [];
+            if (fornecedores.some(fornecedor => fornecedor.cnpj === cnpj)) {
+                alert('Já existe um fornecedor cadastrado com este CNPJ!');
+                return;
+            }
+            fornecedores.push({ nomeEmpresa, cnpj });
+            localStorage.setItem('fornecedores', JSON.stringify(fornecedores));
+            alert('Fornecedor cadastrado com sucesso!');
+            this.reset();
+            voltarTelaPrincipal();
+        });
+
+        // Cadastro de Produto
+        document.getElementById('cadastro-produto-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const nome = document.getElementById('produto-nome').value.trim();
+            const codigoBarras = document.getElementById('produto-codigo-barras').value.trim();
+            const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+            if (produtos.some(produto => produto.codigoBarras === codigoBarras)) {
+                alert('Já existe um produto cadastrado com este código de barras!');
+                return;
+            }
+            produtos.push({ nome, codigoBarras });
+            localStorage.setItem('produtos', JSON.stringify(produtos));
+            alert('Produto cadastrado com sucesso!');
+            this.reset();
+            voltarTelaPrincipal();
+        });
+
+        // Carregar Fornecedores e Produtos
+        function carregarFornecedores() {
+            const fornecedores = JSON.parse(localStorage.getItem('fornecedores')) || [];
+            const fornecedorSelect = document.getElementById('fornecedor-select');
+            fornecedorSelect.innerHTML = '<option value="">Selecione um fornecedor</option>';
+            fornecedores.forEach(fornecedor => {
+                const option = document.createElement('option');
+                option.value = fornecedor.cnpj;
+                option.textContent = `${fornecedor.nomeEmpresa} - ${fornecedor.cnpj}`;
+                fornecedorSelect.appendChild(option);
+            });
+        }
+
+        function carregarProdutos() {
+            const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+            const produtoSelect = document.getElementById('produto-select');
+            produtoSelect.innerHTML = '<option value="">Selecione um produto</option>';
+            produtos.forEach(produto => {
+                const option = document.createElement('option');
+                option.value = produto.codigoBarras;
+                option.textContent = `${produto.nome} - ${produto.codigoBarras}`;
+                produtoSelect.appendChild(option);
+            });
+        }
+
+        // Associação de Fornecedor a Produto
+        function associarFornecedor() {
+            const fornecedorCNPJ = document.getElementById('fornecedor-select').value;
+            const produtoCodigoBarras = document.getElementById('produto-select').value;
+
+            if (!fornecedorCNPJ || !produtoCodigoBarras) {
+                alert('Selecione um fornecedor e um produto!');
+                return;
+            }
+
+            const associacoes = JSON.parse(localStorage.getItem('associacoes')) || [];
+            if (associacoes.some(associacao => associacao.fornecedor === fornecedorCNPJ && associacao.produto === produtoCodigoBarras)) {
+                alert('Essa associação já existe!');
+                return;
+            }
+
+            associacoes.push({ fornecedor: fornecedorCNPJ, produto: produtoCodigoBarras });
+            localStorage.setItem('associacoes', JSON.stringify(associacoes));
+            alert('Associação realizada com sucesso!');
+            carregarAssociacoes();
+        }
+
+        // Carregar Associações na Tabela
+        function carregarAssociacoes() {
+            const associacoes = JSON.parse(localStorage.getItem('associacoes')) || [];
+            const fornecedores = JSON.parse(localStorage.getItem('fornecedores')) || [];
+            const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+            const tabela = document.getElementById('fornecedores-associados').querySelector('tbody');
+            tabela.innerHTML = '';
+
+            associacoes.forEach(associacao => {
+                const fornecedor = fornecedores.find(f => f.cnpj === associacao.fornecedor);
+                const produto = produtos.find(p => p.codigoBarras === associacao.produto);
+
+                if (fornecedor && produto) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${fornecedor.nomeEmpresa}</td>
+                        <td>${produto.nome}</td>
+                        <td><button onclick="removerAssociacao('${associacao.fornecedor}', '${associacao.produto}')">Remover</button></td>
+                    `;
+                    tabela.appendChild(row);
+                }
+            });
+        }
+
+        // Remover Associação
+        function removerAssociacao(fornecedorCNPJ, produtoCodigoBarras) {
+            let associacoes = JSON.parse(localStorage.getItem('associacoes')) || [];
+            associacoes = associacoes.filter(associacao => !(associacao.fornecedor === fornecedorCNPJ && associacao.produto === produtoCodigoBarras));
+            localStorage.setItem('associacoes', JSON.stringify(associacoes));
+            alert('Associação removida com sucesso!');
+            carregarAssociacoes();
+        }
+    </script>
+</body>
+</html>
